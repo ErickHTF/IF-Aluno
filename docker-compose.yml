@@ -1,0 +1,15 @@
+services:
+
+  postgres:
+    image: postgres:13.22
+    container_name: demo
+    restart: always
+    environment:
+      POSTGRES_USER: aluno_user
+      POSTGRES_PASSWORD: aluno_password
+      POSTGRES_DB: Aluno
+    ports:
+      - "5433:5432"
+
+volumes:
+  postgres_data:

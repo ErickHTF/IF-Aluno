@@ -3,11 +3,10 @@ package com.demo.aluno.controller;
 import com.demo.aluno.dto.AlunoDTO;
 import com.demo.aluno.model.Aluno;
 import com.demo.aluno.service.AlunoService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -28,5 +27,14 @@ public class AlunoController {
 
         return ResponseEntity.ok(
                 alunos.stream().map(AlunoDTO::new).toList());
+    }
+
+    @PostMapping("/aluno")
+    public void saveAluno(
+            @Valid @RequestBody AlunoDTO alunoDTO
+    ){
+
+    alunoService.saveAluno(alunoDTO);
+
     }
 }

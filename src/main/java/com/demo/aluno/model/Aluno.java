@@ -1,18 +1,24 @@
 package com.demo.aluno.model;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.Generated;
-import org.hibernate.annotations.IdGeneratorType;
-import org.hibernate.annotations.UuidGenerator;
+import jakarta.validation.constraints.*;
+
+import java.time.LocalDate;
 
 @Entity
 public class Aluno {
 
-    public Aluno(Integer id, String nome, String email, String matricula) {
+    public Aluno(Long id, String nome, String email, String matricula,
+                 String cpf, Float altura,String telefone, LocalDate dtNasc, Boolean ativo) {
         this.id = id;
         this.nome = nome;
         this.email = email;
         this.matricula = matricula;
+        this.cpf = cpf;
+        this.altura = altura;
+        this.telefone = telefone;
+        this.dtNasc = dtNasc;
+        this.ativo = ativo;
     }
 
     public Aluno() {}
@@ -20,22 +26,47 @@ public class Aluno {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false, unique = true)
-    private Integer id;
+    private Long id;
 
+    @NotBlank(message = "Nome é obrigatório")
+    @Size(min = 3, max = 100, message = "Nome deve ter entre 3 e 100 caracteres")
     @Column
     private String nome;
 
-    @Column
+    @NotBlank(message = "Email é obrigatório")
+    @Email(message = "Email inválido")
+    @Column(unique = true)
     private String email;
 
-    @Column
+    @NotBlank(message = "Matrícula é obrigatória")
+    @Column(unique = true)
     private String matricula;
 
-    public Integer getId() {
+    @NotBlank(message = "CPF é obrigatório")
+    @Pattern(regexp = "\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}", message = "CPF deve estar no formato XXX.XXX.XXX-XX")
+    @Column
+    private String cpf;
+
+    @NotNull(message = "Altura é obrigatória")
+    @DecimalMin(value = "0.0", inclusive = false, message = "Altura deve ser maior que zero")
+    @Column
+    private Float altura;
+
+    @Pattern(regexp = "^\\(?\\d{2}\\)?[\\s-]?\\d{4,5}-?\\d{4}$", message = "Telefone inválido")
+    @Column
+    private String telefone;
+
+    @Column
+    private LocalDate dtNasc;
+
+    @Column
+    private Boolean ativo;
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -61,5 +92,45 @@ public class Aluno {
 
     public void setMatricula(String matricula) {
         this.matricula = matricula;
+    }
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
+
+    public Float getAltura() {
+        return altura;
+    }
+
+    public void setAltura(Float altura) {
+        this.altura = altura;
+    }
+
+    public String getTelefone() {
+        return telefone;
+    }
+
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
+    }
+
+    public LocalDate getDtNasc() {
+        return dtNasc;
+    }
+
+    public void setDtNasc(LocalDate dtNasc) {
+        this.dtNasc = dtNasc;
+    }
+
+    public Boolean getAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(Boolean ativo) {
+        this.ativo = ativo;
     }
 }

@@ -2,12 +2,19 @@ package com.demo.aluno.dto;
 
 import com.demo.aluno.model.Aluno;
 
+import java.time.LocalDate;
+
 public class AlunoDTO {
 
-    private Integer id;
+    private Long id;
     private String nome;
     private String email;
     private String matricula;
+    private String cpf;
+    private Float altura;
+    private String telefone;
+    private LocalDate dtNasc;
+    private Boolean ativo;
 
     public AlunoDTO() {}
 
@@ -16,13 +23,18 @@ public class AlunoDTO {
         this.nome = aluno.getNome();
         this.email = aluno.getEmail();
         this.matricula = aluno.getMatricula();
+        this.cpf = aluno.getCpf();
+        this.altura = aluno.getAltura();
+        this.telefone = aluno.getTelefone();
+        this.dtNasc = aluno.getDtNasc();
+        this.ativo = aluno.getAtivo();
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -48,5 +60,45 @@ public class AlunoDTO {
 
     public void setMatricula(String matricula) {
         this.matricula = matricula;
+    }
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
+
+    public Float getAltura() {
+        return altura;
+    }
+
+    public void setAltura(Float altura) {
+        this.altura = altura;
+    }
+
+    public String getTelefone() {
+        return telefone;
+    }
+
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
+    }
+
+    public LocalDate getDtNasc() {
+        return dtNasc;
+    }
+
+    public void setDtNasc(LocalDate dtNasc) {
+        this.dtNasc = dtNasc;
+    }
+
+    public Boolean getAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(Boolean ativo) {
+        this.ativo = ativo;
     }
 }

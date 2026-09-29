@@ -1,0 +1,211 @@
+{
+  "info": {
+    "_postman_id": "d7c8d5db-e3cc-48d7-a0d4-a0e9da46fa73",
+    "name": "Escolas-DEMO-API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "58618415",
+    "_collection_link": "https://go.postman.co/collection/58618415-d7c8d5db-e3cc-48d7-a0d4-a0e9da46fa73?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Exclui uma Escola",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "accept",
+            "value": "*/*"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/demo-api/escolas/1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "demo-api",
+            "escolas",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Recuperar Escolas por Id",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "accept",
+            "value": "*/*"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/demo-api/escolas/1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "demo-api",
+            "escolas",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Recuperar Escolas Filtradas",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "accept",
+            "value": "*/*"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/demo-api/escola?nivel=SUPERIOR",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "demo-api",
+            "escola"
+          ],
+          "query": [
+            {
+              "key": "nivel",
+              "value": "SUPERIOR"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Recuperar Escolas",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "accept",
+            "value": "*/*"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/demo-api/escolas",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "demo-api",
+            "escolas"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Criar Escola",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "accept",
+            "value": "*/*"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nome\": \"IFSP\",\n  \"nivel\": \"SUPERIOR\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/demo-api/escolas",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "demo-api",
+            "escolas"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Atualizar Escola",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "PUT",
+        "header": [
+          {
+            "key": "accept",
+            "value": "*/*"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nome\": \"IFSP2\",\n  \"nivel\": \"SUPERIOR\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/demo-api/escolas/1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "demo-api",
+            "escolas",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

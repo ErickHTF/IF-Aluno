@@ -8,19 +8,6 @@ import java.time.LocalDate;
 @Entity
 public class Aluno {
 
-    public Aluno(Long id, String nome, String email, String matricula,
-                 String cpf, Float altura,String telefone, LocalDate dtNasc, Boolean ativo) {
-        this.id = id;
-        this.nome = nome;
-        this.email = email;
-        this.matricula = matricula;
-        this.cpf = cpf;
-        this.altura = altura;
-        this.telefone = telefone;
-        this.dtNasc = dtNasc;
-        this.ativo = ativo;
-    }
-
     public Aluno() {}
 
     @Id

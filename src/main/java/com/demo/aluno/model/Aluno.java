@@ -39,13 +39,17 @@ public class Aluno {
     @Column
     private Float altura;
 
+    @NotBlank(message = "Telefone é obrigatório")
     @Pattern(regexp = "^\\(?\\d{2}\\)?[\\s-]?\\d{4,5}-?\\d{4}$", message = "Telefone inválido")
     @Column
     private String telefone;
 
+    @NotNull(message = "Data de nascimento é obrigatória")
+    @Past(message = "Data de nascimento deve ser uma data passada")
     @Column
     private LocalDate dtNasc;
 
+    @NotNull(message = "Ativo é obrigatório")
     @Column
     private Boolean ativo;
 

@@ -7,6 +7,7 @@ import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
@@ -43,13 +44,17 @@ public class AlunoDTO {
     private Float altura;
 
     @Schema(description = "Telefone do aluno", example = "(16) 99123-4567")
+    @NotBlank(message = "Telefone é obrigatório")
     @Pattern(regexp = "^\\(?\\d{2}\\)?[\\s-]?\\d{4,5}-?\\d{4}$", message = "Telefone inválido")
     private String telefone;
 
     @Schema(description = "Data de nascimento", example = "2005-03-15")
+    @NotNull(message = "Data de nascimento é obrigatória")
+    @Past(message = "Data de nascimento deve ser uma data passada")
     private LocalDate dtNasc;
 
     @Schema(description = "Indica se o aluno está ativo", example = "true")
+    @NotNull(message = "Ativo é obrigatório")
     private Boolean ativo;
 
     public AlunoDTO() {}

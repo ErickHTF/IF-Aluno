@@ -11,9 +11,9 @@ import java.util.List;
 public interface EscolaRepository extends CrudRepository<Escola, Integer> {
 
     @Query("select e from Escola e where " +
-           "(:id is null or e.id = :id) and " +
-           "(:nome is null or lower(e.nome) like lower(concat('%', :nome, '%'))) and " +
-           "(:nivel is null or e.nivel = :nivel)")
+           "e.id = coalesce(:id, e.id) and " +
+           "lower(e.nome) like lower(concat('%', coalesce(:nome, e.nome), '%')) and " +
+           "e.nivel = coalesce(:nivel, e.nivel)")
     List<Escola> searchAll(@Param("id") Integer id,
                            @Param("nome") String nome,
                            @Param("nivel") Nivel nivel);

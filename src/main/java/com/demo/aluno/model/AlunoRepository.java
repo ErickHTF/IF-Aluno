@@ -11,10 +11,10 @@ import java.util.List;
 public interface AlunoRepository extends CrudRepository<Aluno, Long> {
 
     @Query("select a from Aluno a where " +
-           "(:id is null or a.id = :id) and " +
-           "(:nome is null or lower(a.nome) like lower(concat('%', :nome, '%'))) and " +
-           "(:email is null or lower(a.email) like lower(concat('%', :email, '%'))) and " +
-           "(:matricula is null or lower(a.matricula) like lower(concat('%', :matricula, '%')))")
+           "a.id = coalesce(:id, a.id) and " +
+           "lower(a.nome) like lower(concat('%', coalesce(:nome, a.nome), '%')) and " +
+           "lower(a.email) like lower(concat('%', coalesce(:email, a.email), '%')) and " +
+           "lower(a.matricula) like lower(concat('%', coalesce(:matricula, a.matricula), '%'))")
     List<Aluno> searchMainParameters(@Param("id") Long id,
                           @Param("nome") String nome,
                           @Param("email") String email,

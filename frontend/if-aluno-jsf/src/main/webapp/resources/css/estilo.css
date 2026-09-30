@@ -121,3 +121,12 @@ body {
 .menubar {
 	border-radius: 0 !important;
 }
+
+/* Campos dos diálogos ocupam toda a largura da célula */
+.ui-dialog .ui-panelgrid-cell .ui-inputfield,
+.ui-dialog .ui-panelgrid-cell .ui-inputnumber,
+.ui-dialog .ui-panelgrid-cell .ui-selectonemenu,
+.ui-dialog .ui-panelgrid-cell .ui-datepicker {
+	width: 100% !important;
+	box-sizing: border-box;
+}

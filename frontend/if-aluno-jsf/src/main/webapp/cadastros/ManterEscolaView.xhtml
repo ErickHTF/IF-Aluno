@@ -17,9 +17,13 @@
 			<p:panel header="Filtros" toggleable="true" collapsed="false" style="margin-top: 20px">
 				<p:panelGrid columns="4" style="width: 100%" columnClasses="rotulo, campo, rotulo, campo">
 
+					<p:outputLabel value="Id" for="filtroId" />
+					<p:inputText id="filtroId" value="#{manterEscolaBean.filtroId}"
+						styleClass="js-inteiro" placeholder="Ex.: 1" />
+
 					<p:outputLabel value="Nome" for="filtroNome" />
 					<p:inputText id="filtroNome" value="#{manterEscolaBean.filtroNome}"
-						placeholder="Ex.: IFSP" />
+						styleClass="js-nome" placeholder="Ex.: IFSP" />
 
 					<p:outputLabel value="Nível" for="filtroNivel" />
 					<p:selectOneMenu id="filtroNivel" value="#{manterEscolaBean.filtroNivel}">
@@ -93,13 +97,11 @@
 				<p:panelGrid id="editarGrid" columns="2" style="width: 100%"
 					columnClasses="rotulo, campo">
 
-					<p:outputLabel value="Id" for="id" />
-					<p:inputText id="id" value="#{manterEscolaBean.escola.id}" readonly="true" />
-
 					<p:outputLabel value="Nome" for="nome" />
 					<h:panelGroup>
-						<p:inputText id="nome" size="60" maxlength="100" required="true"
+						<p:inputText id="nome" maxlength="100" required="true"
 							requiredMessage="Informe o nome."
+							styleClass="js-nome"
 							placeholder="Ex.: IFSP"
 							validator="#{validadores.nome}"
 							value="#{manterEscolaBean.escola.nome}">

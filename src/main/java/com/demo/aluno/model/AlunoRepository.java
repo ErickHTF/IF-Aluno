@@ -12,9 +12,9 @@ public interface AlunoRepository extends CrudRepository<Aluno, Long> {
 
     @Query("select a from Aluno a where " +
            "(:id is null or a.id = :id) and " +
-           "(:nome is null or a.nome like %:nome%) and " +
-           "(:email is null or a.email like %:email%) and " +
-           "(:matricula is null or a.matricula like %:matricula%)")
+           "(:nome is null or lower(a.nome) like lower(concat('%', :nome, '%'))) and " +
+           "(:email is null or lower(a.email) like lower(concat('%', :email, '%'))) and " +
+           "(:matricula is null or lower(a.matricula) like lower(concat('%', :matricula, '%')))")
     List<Aluno> searchMainParameters(@Param("id") Long id,
                           @Param("nome") String nome,
                           @Param("email") String email,

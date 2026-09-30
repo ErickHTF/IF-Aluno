@@ -12,7 +12,7 @@ public interface EscolaRepository extends CrudRepository<Escola, Integer> {
 
     @Query("select e from Escola e where " +
            "(:id is null or e.id = :id) and " +
-           "(:nome is null or e.nome like %:nome%) and " +
+           "(:nome is null or lower(e.nome) like lower(concat('%', :nome, '%'))) and " +
            "(:nivel is null or e.nivel = :nivel)")
     List<Escola> searchAll(@Param("id") Integer id,
                            @Param("nome") String nome,

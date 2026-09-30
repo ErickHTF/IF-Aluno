@@ -1,0 +1,247 @@
+<ui:composition template="/WEB-INF/template/LayoutPadrao.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="corpo">
+
+		<h1>Tela de Aluno</h1>
+
+		<h:form id="frmPesquisa">
+			<p:messages id="messages" showDetail="false" closable="true" globalOnly="true">
+				<p:autoUpdate />
+			</p:messages>
+
+			<p:panel header="Filtros" toggleable="true" collapsed="false" style="margin-top: 20px">
+				<p:panelGrid columns="4" style="width: 100%" columnClasses="rotulo, campo, rotulo, campo">
+
+					<p:outputLabel value="Id" for="filtroId" />
+					<p:inputText id="filtroId" value="#{manterAlunoBean.filtroId}"
+						placeholder="Ex.: 1" />
+
+					<p:outputLabel value="Nome" for="filtroNome" />
+					<p:inputText id="filtroNome" value="#{manterAlunoBean.filtroNome}"
+						placeholder="Ex.: João Silva" />
+
+					<p:outputLabel value="Email" for="filtroEmail" />
+					<p:inputText id="filtroEmail" value="#{manterAlunoBean.filtroEmail}"
+						placeholder="Ex.: email@aluno.ifsp.edu.br" />
+
+					<p:outputLabel value="Matrícula" for="filtroMatricula" />
+					<p:inputText id="filtroMatricula" value="#{manterAlunoBean.filtroMatricula}"
+						placeholder="Ex.: SP123456" />
+
+					<p:commandButton icon="pi pi-search" value="Pesquisar"
+						action="#{manterAlunoBean.pesquisar}"
+						update="alunosTable messages"
+						process="filtroId filtroNome filtroEmail filtroMatricula" />
+
+					<p:commandButton icon="pi pi-times" value="Limpar"
+						action="#{manterAlunoBean.limparFiltros}" immediate="true"
+						update="filtroId filtroNome filtroEmail filtroMatricula alunosTable messages"
+						process="@this" />
+
+				</p:panelGrid>
+			</p:panel>
+
+			<p:toolbar style="margin-top: 20px">
+				<p:toolbarGroup>
+					<p:commandButton icon="pi pi-plus" value="Novo" id="botaoNovo"
+						actionListener="#{manterAlunoBean.novo}"
+						oncomplete="PF('editarDialogWidgetVar').show()"
+						update="editarDialog" process="@this" />
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			<p:dataTable id="alunosTable" var="aluno"
+				value="#{manterAlunoBean.alunos}" lazy="false"
+				style="margin-top: 20px" emptyMessage="Nenhum aluno encontrado."
+				rows="10" paginator="true" paginatorAlwaysVisible="true"
+				paginatorPosition="bottom" rowsPerPageTemplate="5,10,15">
+
+				<p:column headerText="Id" style="width: 50px; text-align: center">
+					<h:outputText value="#{aluno.id}" />
+				</p:column>
+
+				<p:column headerText="Nome" style="text-align: left">
+					<h:outputText value="#{aluno.nome}" />
+				</p:column>
+
+				<p:column headerText="Email" style="text-align: left">
+					<h:outputText value="#{aluno.email}" />
+				</p:column>
+
+				<p:column headerText="Matrícula" style="text-align: left">
+					<h:outputText value="#{aluno.matricula}" />
+				</p:column>
+
+				<p:column headerText="CPF" style="text-align: left">
+					<h:outputText value="#{aluno.cpf}" />
+				</p:column>
+
+				<p:column headerText="Telefone" style="text-align: left">
+					<h:outputText value="#{aluno.telefone}" />
+				</p:column>
+
+				<p:column headerText="Altura" style="width: 80px; text-align: right">
+					<h:outputText value="#{aluno.altura}">
+						<f:convertNumber pattern="#0.00" />
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="Nascimento" style="width: 110px; text-align: center">
+					<h:outputText value="#{aluno.dtNasc}">
+						<f:convertDateTime pattern="dd/MM/yyyy" type="localDate" />
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="Ativo" style="width: 60px; text-align: center">
+					<h:outputText value="#{aluno.ativo ? 'Sim' : 'Não'}" />
+				</p:column>
+
+				<p:column headerText="Operações" style="width: 110px; text-align: center">
+					<p:commandButton id="cbEditar" icon="pi pi-pencil" title="Editar"
+						actionListener="#{manterAlunoBean.editar(aluno)}"
+						oncomplete="PF('editarDialogWidgetVar').show()"
+						update=":frmPesquisa:editarDialog" process="@this" />
+
+					<p:commandButton icon="pi pi-trash" title="Excluir"
+						onclick="PF('confirmacaoExclusao').show();" process="@this">
+						<f:setPropertyActionListener target="#{manterAlunoBean.aluno}"
+							value="#{aluno}" />
+					</p:commandButton>
+				</p:column>
+
+			</p:dataTable>
+
+			<p:dialog id="editarDialog"
+				header="#{manterAlunoBean.aluno.id == null ? 'Novo Aluno' : 'Editar Aluno'}"
+				widgetVar="editarDialogWidgetVar" modal="true" resizable="true"
+				closeOnEscape="true" showEffect="explode" hideEffect="explode"
+				width="55%" position="center top" maximizable="true" fitViewport="true"
+				responsive="true">
+
+				<p:panelGrid id="editarGrid" columns="2" style="width: 100%"
+					columnClasses="rotulo, campo">
+
+					<p:outputLabel value="Nome" for="nome" />
+					<h:panelGroup>
+						<p:inputText id="nome" size="60" maxlength="100" required="true"
+							requiredMessage="Informe o nome."
+							placeholder="Ex.: João Silva"
+							validator="#{validadores.nome}"
+							value="#{manterAlunoBean.aluno.nome}">
+							<p:ajax event="blur" process="@this" update="msgNome" />
+						</p:inputText>
+						<p:message id="msgNome" for="nome" />
+					</h:panelGroup>
+
+					<p:outputLabel value="Email" for="email" />
+					<h:panelGroup>
+						<p:inputText id="email" size="60" maxlength="100" required="true"
+							requiredMessage="Informe o email."
+							placeholder="Ex.: email@aluno.ifsp.edu.br"
+							validator="#{validadores.email}"
+							value="#{manterAlunoBean.aluno.email}">
+							<p:ajax event="blur" process="@this" update="msgEmail" />
+						</p:inputText>
+						<p:message id="msgEmail" for="email" />
+					</h:panelGroup>
+
+					<p:outputLabel value="Matrícula" for="matricula" />
+					<h:panelGroup>
+						<p:inputText id="matricula" size="30" maxlength="30" required="true"
+							requiredMessage="Informe a matrícula."
+							placeholder="Ex.: SP123456"
+							value="#{manterAlunoBean.aluno.matricula}">
+							<p:ajax event="blur" process="@this" update="msgMatricula" />
+						</p:inputText>
+						<p:message id="msgMatricula" for="matricula" />
+					</h:panelGroup>
+
+					<p:outputLabel value="CPF" for="cpf" />
+					<h:panelGroup>
+						<p:inputMask id="cpf" mask="999.999.999-99" required="true"
+							requiredMessage="Informe o CPF."
+							value="#{manterAlunoBean.aluno.cpf}">
+							<p:ajax event="blur" process="@this" update="msgCpf" />
+						</p:inputMask>
+						<p:message id="msgCpf" for="cpf" />
+					</h:panelGroup>
+
+					<p:outputLabel value="Altura" for="altura" />
+					<h:panelGroup>
+						<p:inputNumber id="altura" required="true"
+							requiredMessage="Informe a altura."
+							decimalPlaces="2" decimalSeparator="," thousandSeparator="."
+							minValue="0.01" maxValue="9.99"
+							placeholder="Ex.: 1,75"
+							value="#{manterAlunoBean.aluno.altura}">
+							<p:ajax event="blur" process="@this" update="msgAltura" />
+						</p:inputNumber>
+						<p:message id="msgAltura" for="altura" />
+					</h:panelGroup>
+
+					<p:outputLabel value="Telefone" for="telefone" />
+					<h:panelGroup>
+						<p:inputMask id="telefone" mask="(99) 99999-9999"
+							placeholder="(16) 99123-4567"
+							value="#{manterAlunoBean.aluno.telefone}">
+							<p:ajax event="blur" process="@this" update="msgTelefone" />
+						</p:inputMask>
+						<p:message id="msgTelefone" for="telefone" />
+					</h:panelGroup>
+
+					<p:outputLabel value="Data de Nascimento" for="dtNasc" />
+					<h:panelGroup>
+						<p:datePicker id="dtNasc" pattern="dd/MM/yyyy" showTime="false"
+							required="true" requiredMessage="Informe a data de nascimento."
+							placeholder="Ex.: 15/03/2005"
+							validator="#{validadores.dataPassada}"
+							style="width: 100%" value="#{manterAlunoBean.aluno.dtNasc}">
+							<p:ajax event="blur" process="@this" update="msgDtNasc" />
+						</p:datePicker>
+						<p:message id="msgDtNasc" for="dtNasc" />
+					</h:panelGroup>
+
+					<p:outputLabel value="Ativo" for="ativo" />
+					<h:panelGroup>
+						<p:selectBooleanCheckbox id="ativo"
+							value="#{manterAlunoBean.aluno.ativo}" />
+					</h:panelGroup>
+
+				</p:panelGrid>
+
+				<f:facet name="footer">
+					<p:commandButton icon="pi pi-save" id="salvarButton" value="Salvar"
+						title="Grava dados do aluno"
+						actionListener="#{manterAlunoBean.salvar}"
+						update=":frmPesquisa:alunosTable :frmPesquisa:messages :frmPesquisa:editarDialog"
+						process="@this editarGrid"
+						oncomplete="if (!args.validationFailed &amp;&amp; !args.erroApi) { PF('editarDialogWidgetVar').hide(); }" />
+
+					<p:spacer width="10px" />
+
+					<p:commandButton icon="pi pi-times" value="Cancelar" type="button"
+						onclick="PF('editarDialogWidgetVar').hide();" process="@this" />
+				</f:facet>
+
+			</p:dialog>
+
+			<p:confirmDialog id="confirmacaoExclusaoDialog"
+				widgetVar="confirmacaoExclusao"
+				message="Tem certeza que deseja excluir o aluno #{manterAlunoBean.aluno.nome}?"
+				header="Exclusão de aluno" severity="alert">
+				<p:button icon="pi pi-times" value="Não"
+					onclick="PF('confirmacaoExclusao').hide(); return false;" />
+				<p:commandButton icon="pi pi-check" value="Sim"
+					update=":frmPesquisa:alunosTable :frmPesquisa:messages"
+					onclick="PF('confirmacaoExclusao').hide();"
+					action="#{manterAlunoBean.excluir}" process="@this" />
+			</p:confirmDialog>
+
+		</h:form>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,187 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>ifaluno</groupId>
+	<artifactId>if-aluno-jsf</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
+	<packaging>war</packaging>
+	<description>Frontend JSF para a API IF-Aluno</description>
+
+	<properties>
+		<java.version>17</java.version>
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<!-- Diretorio de deploy do Tomcat. Sobrescreva com: mvn install -Dtomcat.webapps=/opt/tomcat/webapps -->
+		<tomcat.webapps>C:\apache-tomcat-9.0.62\webapps</tomcat.webapps>
+		<!-- Porta do Tomcat embarcado (cargo:run). Sobrescreva com: -Dcargo.servlet.port=9090 -->
+		<cargo.servlet.port>8080</cargo.servlet.port>
+	</properties>
+
+	<build>
+		<finalName>if-aluno-jsf</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>3.3.2</version>
+			</plugin>
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>3.1.0</version>
+				<executions>
+					<execution>
+						<id>copy-resource-one</id>
+						<phase>install</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${tomcat.webapps}</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${project.build.directory}</directory>
+									<includes>
+										<include>if-aluno-jsf.war</include>
+									</includes>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.10.1</version>
+				<configuration>
+					<annotationProcessorPaths>
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+							<version>1.18.48</version>
+						</path>
+					</annotationProcessorPaths>
+				</configuration>
+			</plugin>
+			<!-- Sobe o Tomcat 9 e faz o deploy do WAR: mvn clean package cargo:run -->
+			<plugin>
+				<groupId>org.codehaus.cargo</groupId>
+				<artifactId>cargo-maven3-plugin</artifactId>
+				<version>1.10.29</version>
+				<configuration>
+					<container>
+						<containerId>tomcat9x</containerId>
+						<artifactInstaller>
+							<groupId>org.apache.tomcat</groupId>
+							<artifactId>tomcat</artifactId>
+							<version>9.0.98</version>
+						</artifactInstaller>
+					</container>
+					<configuration>
+						<type>standalone</type>
+						<properties>
+							<cargo.servlet.port>${cargo.servlet.port}</cargo.servlet.port>
+							<cargo.logging>medium</cargo.logging>
+						</properties>
+					</configuration>
+					<deployables>
+						<deployable>
+							<groupId>ifaluno</groupId>
+							<artifactId>if-aluno-jsf</artifactId>
+							<type>war</type>
+							<properties>
+								<context>/if-aluno-jsf</context>
+							</properties>
+						</deployable>
+					</deployables>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
+
+		<!-- Servlet/JSF -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>4.0.1</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>jstl</artifactId>
+			<version>1.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.weld.servlet</groupId>
+			<artifactId>weld-servlet-core</artifactId>
+			<version>3.1.9.Final</version>
+		</dependency>
+		<!-- JSF e Expression Language -->
+		<dependency>
+			<groupId>org.glassfish</groupId>
+			<artifactId>javax.faces</artifactId>
+			<version>2.4.0</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.el</groupId>
+			<artifactId>javax.el-api</artifactId>
+			<version>3.0.0</version>
+		</dependency>
+
+		<!-- JSON -->
+		<dependency>
+			<groupId>tools.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>3.0.4</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.13.2</version>
+			<scope>compile</scope>
+		</dependency>
+
+		<!-- PrimeFaces (Biblioteca de componentes) -->
+		<dependency>
+			<groupId>org.primefaces</groupId>
+			<artifactId>primefaces</artifactId>
+			<version>14.0.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.48</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.7.28</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>2.18.0</version>
+		</dependency>
+
+	</dependencies>
+
+	<repositories>
+		<repository>
+			<id>prime-repo</id>
+			<name>PrimeFaces Maven Repository</name>
+			<url>https://repository.primefaces.org</url>
+			<layout>default</layout>
+		</repository>
+	</repositories>
+
+	<organization>
+		<name>IFSP</name>
+	</organization>
+</project>

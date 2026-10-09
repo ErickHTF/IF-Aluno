@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  backend:
+    name: Backend (Spring Boot)
+    runs-on: ubuntu-latest
+    # O teste contextLoads (@SpringBootTest) conecta no Postgres
+    # configurado em src/main/resources/application.properties.
+    services:
+      postgres:
+        image: postgres:13.22
+        env:
+          POSTGRES_USER: aluno_user
+          POSTGRES_PASSWORD: aluno_password
+          POSTGRES_DB: Aluno
+        ports:
+          - 5433:5432
+        options: >-
+          --health-cmd "pg_isready -U aluno_user -d Aluno"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+      - name: Build e testes
+        run: ./mvnw -B verify
+
+  frontend:
+    name: Frontend (JSF)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend/if-aluno-jsf
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+          cache-dependency-path: frontend/if-aluno-jsf/pom.xml
+      - name: Build do WAR
+        run: ./mvnw -B package

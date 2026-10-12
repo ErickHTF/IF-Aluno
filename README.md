@@ -1,53 +1,53 @@
 # IF-Aluno
 
-CRUD de **alunos** e **escolas** desenvolvido na disciplina Linguagem de Programação 2 (IFSP).
-Uma API REST em Spring Boot guarda os dados no PostgreSQL. Um frontend JSF/PrimeFaces consome essa API.
+CRUD for **students** (alunos) and **schools** (escolas) built for the Programming Language 2 course (IFSP).
+A Spring Boot REST API stores the data in PostgreSQL. A JSF/PrimeFaces frontend consumes that API.
 
-## Funcionalidades
+## Features
 
-- **Alunos**: cadastrar, listar, filtrar, editar e excluir.
-  - Campos: nome, email, matrícula, CPF, altura, telefone, data de nascimento e ativo.
-  - Validações: nome com 3 a 100 caracteres, email válido, CPF no formato `XXX.XXX.XXX-XX`, altura maior que zero, telefone como `(16) 99123-4567` e data de nascimento no passado. Todos os campos são obrigatórios.
-  - Email e matrícula são únicos. Um valor duplicado retorna `409 Conflict`.
-- **Escolas**: cadastrar, listar, filtrar, editar e excluir.
-  - Campos: nome (3 a 100 caracteres) e nível (`FUNDAMENTAL`, `MEDIO` ou `SUPERIOR`).
-- **Filtros**: os textos são buscados por trecho, sem diferenciar maiúsculas de minúsculas. Um filtro omitido é ignorado.
-- **Erros**: validações e dados malformados retornam `400` com um JSON padronizado (`mensagem`, `mensagens` e `campos`, que traz o erro de cada campo).
+- **Students**: create, list, filter, edit and delete.
+  - Fields: name, email, enrollment number, CPF, height, phone, date of birth and active.
+  - Validation: name with 3 to 100 characters, valid email, CPF in the `XXX.XXX.XXX-XX` format, height greater than zero, phone like `(16) 99123-4567` and date of birth in the past. All fields are required.
+  - Email and enrollment number are unique. A duplicate value returns `409 Conflict`.
+- **Schools**: create, list, filter, edit and delete.
+  - Fields: name (3 to 100 characters) and level (`FUNDAMENTAL`, `MEDIO` or `SUPERIOR`).
+- **Filters**: text fields are matched by substring, case-insensitive. An omitted filter is ignored.
+- **Errors**: validation failures and malformed data return `400` with a standard JSON body (`mensagem`, `mensagens` and `campos`, which holds the error for each field).
 
-## Arquitetura
+## Architecture
 
 ```
-Navegador ──► Frontend JSF (Tomcat 9, :8080) ──HTTP/JSON──► API Spring Boot (:8081) ──JPA──► PostgreSQL (Docker, :5433)
+Browser ──► JSF Frontend (Tomcat 9, :8080) ──HTTP/JSON──► Spring Boot API (:8081) ──JPA──► PostgreSQL (Docker, :5433)
 ```
 
-| Pasta | Conteúdo |
+| Folder | Contents |
 |---|---|
-| `/` (raiz) | API REST, pacote `com.demo`, com módulos `aluno`, `escola` e `config` |
-| `frontend/if-aluno-jsf` | Frontend JSF/PrimeFaces, empacotado como WAR |
+| `/` (root) | REST API, `com.demo` package, with `aluno`, `escola` and `config` modules |
+| `frontend/if-aluno-jsf` | JSF/PrimeFaces frontend, packaged as a WAR |
 
-O frontend acessa a API em `http://localhost:8081/demo-api`. Essa URL fica em `ifaluno.utils.JsonUtils.BASE_API`.
+The frontend calls the API at `http://localhost:8081/demo-api`. That URL is set in `ifaluno.utils.JsonUtils.BASE_API`.
 
-## Requisitos
+## Requirements
 
-| Item | Versão |
+| Item | Version |
 |---|---|
-| JDK | 21 (a API usa Java 21; o frontend compila para Java 17) |
-| Docker / Docker Compose | qualquer versão recente (para subir o PostgreSQL 13.22) |
-| Maven | não precisa instalar: use o wrapper `mvnw` (Maven 3.9.16) |
+| JDK | 21 (the API uses Java 21; the frontend compiles to Java 17) |
+| Docker / Docker Compose | any recent version (to run PostgreSQL 13.22) |
+| Maven | no install needed: use the `mvnw` wrapper (Maven 3.9.16) |
 
-Principais dependências: Spring Boot 4.1.0, springdoc-openapi 2.8.6, JSF (Mojarra) 2.4.0, PrimeFaces 14.0.0, Weld 3.1.9 e Tomcat 9.0.98, que o Cargo baixa sozinho.
+Main dependencies: Spring Boot 4.1.0, springdoc-openapi 2.8.6, JSF (Mojarra) 2.4.0, PrimeFaces 14.0.0, Weld 3.1.9 and Tomcat 9.0.98, which Cargo downloads on its own.
 
-## Como rodar
+## Getting Started
 
-Rode os passos na ordem, cada um em um terminal.
+Run the steps in order, each in its own terminal.
 
 **Linux / macOS**
 
 ```bash
-# 1. Banco (na raiz)
+# 1. Database (from the root)
 docker compose up -d
 
-# 2. API (na raiz)
+# 2. API (from the root)
 ./mvnw spring-boot:run
 
 # 3. Frontend
@@ -58,10 +58,10 @@ cd frontend/if-aluno-jsf
 **Windows (cmd / PowerShell)**
 
 ```bat
-:: 1. Banco (na raiz)
+:: 1. Database (from the root)
 docker compose up -d
 
-:: 2. API (na raiz)
+:: 2. API (from the root)
 mvnw.cmd spring-boot:run
 
 :: 3. Frontend
@@ -69,39 +69,39 @@ cd frontend\if-aluno-jsf
 mvnw.cmd clean package cargo:run
 ```
 
-No IntelliJ, você também pode subir a API com o botão Run em `DemoApplication`.
+In IntelliJ, you can also start the API with the Run button on `DemoApplication`.
 
-As tabelas são criadas automaticamente na primeira execução (`ddl-auto=update`).
+Tables are created automatically on first run (`ddl-auto=update`).
 
-## Portas e URLs
+## Ports and URLs
 
-| Serviço | Porta | URL |
+| Service | Port | URL |
 |---|---|---|
-| PostgreSQL (Docker) | 5433 | `jdbc:postgresql://localhost:5433/Aluno` (usuário `aluno_user`, senha `aluno_password`) |
+| PostgreSQL (Docker) | 5433 | `jdbc:postgresql://localhost:5433/Aluno` (user `aluno_user`, password `aluno_password`) |
 | API (Spring Boot) | 8081 | http://localhost:8081/demo-api |
 | Swagger UI | 8081 | http://localhost:8081/swagger-ui/index.html |
 | Frontend (Tomcat 9) | 8080 | http://localhost:8080/if-aluno-jsf/ |
 
-## Endpoints da API
+## API Endpoints
 
-Todos os endpoints ficam sob o prefixo `/demo-api`.
+All endpoints live under the `/demo-api` prefix.
 
-| Método | Rota | Descrição |
+| Method | Route | Description |
 |---|---|---|
-| GET | `/alunos` | Lista todos os alunos |
-| GET | `/alunos/{id}` | Busca um aluno por id (`404` se não existir) |
-| GET | `/aluno?id=&nome=&email=&matricula=` | Filtra alunos (todos os parâmetros são opcionais) |
-| POST | `/alunos` | Cria um aluno (`201`) |
-| PUT | `/alunos/{id}` | Atualiza um aluno (`404` se não existir) |
-| DELETE | `/alunos/{id}` | Exclui um aluno |
-| GET | `/escolas` | Lista todas as escolas |
-| GET | `/escolas/{id}` | Busca uma escola por id (`404` se não existir) |
-| GET | `/escola?id=&nome=&nivel=` | Filtra escolas (todos os parâmetros são opcionais) |
-| POST | `/escolas` | Cria uma escola (`201`) |
-| PUT | `/escolas/{id}` | Atualiza uma escola (`404` se não existir) |
-| DELETE | `/escolas/{id}` | Exclui uma escola |
+| GET | `/alunos` | Lists all students |
+| GET | `/alunos/{id}` | Gets a student by id (`404` if not found) |
+| GET | `/aluno?id=&nome=&email=&matricula=` | Filters students (all parameters are optional) |
+| POST | `/alunos` | Creates a student (`201`) |
+| PUT | `/alunos/{id}` | Updates a student (`404` if not found) |
+| DELETE | `/alunos/{id}` | Deletes a student |
+| GET | `/escolas` | Lists all schools |
+| GET | `/escolas/{id}` | Gets a school by id (`404` if not found) |
+| GET | `/escola?id=&nome=&nivel=` | Filters schools (all parameters are optional) |
+| POST | `/escolas` | Creates a school (`201`) |
+| PUT | `/escolas/{id}` | Updates a school (`404` if not found) |
+| DELETE | `/escolas/{id}` | Deletes a school |
 
-Exemplo de corpo para `POST /demo-api/alunos`:
+Example body for `POST /demo-api/alunos`:
 
 ```json
 {
@@ -116,13 +116,13 @@ Exemplo de corpo para `POST /demo-api/alunos`:
 }
 ```
 
-As coleções do Postman ficam em `src/main/resources/`.
+The Postman collections are in `src/main/resources/`.
 
-## Build e testes
+## Build and Tests
 
 ```bash
-./mvnw verify                                  # API (o teste precisa do Postgres rodando)
-cd frontend/if-aluno-jsf && ./mvnw package     # gera target/if-aluno-jsf.war
+./mvnw verify                                  # API (the test needs Postgres running)
+cd frontend/if-aluno-jsf && ./mvnw package     # produces target/if-aluno-jsf.war
 ```
 
-O GitHub Actions (`.github/workflows/ci.yml`) roda os dois builds a cada push na `main` e em cada pull request. No CI, o PostgreSQL sobe como container de serviço.
+GitHub Actions (`.github/workflows/ci.yml`) runs both builds on every push to `main` and on every pull request. In CI, PostgreSQL runs as a service container.

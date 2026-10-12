@@ -14,6 +14,16 @@ A Spring Boot REST API stores the data in PostgreSQL. A JSF/PrimeFaces frontend 
 - **Filters**: text fields are matched by substring, case-insensitive. An omitted filter is ignored.
 - **Errors**: validation failures and malformed data return `400` with a standard JSON body (`mensagem`, `mensagens` and `campos`, which holds the error for each field).
 
+## Screenshots
+
+![Students screen: filters, list and actions](docs/screenshots/students.jpg)
+
+<details>
+<summary>Schools screen</summary>
+
+![Schools screen](docs/screenshots/schools.jpg)
+</details>
+
 ## Architecture
 
 ```

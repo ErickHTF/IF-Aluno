@@ -1,119 +1,138 @@
-# IF-Aluno — Students and schools
+# IF-Aluno
 
-A student and school management application with a Spring Boot REST API and a
-JSF/PrimeFaces web interface.
+CRUD for **students** (alunos) and **schools** (escolas) built for the Programming Language 2 course (IFSP).
+A Spring Boot REST API stores the data in PostgreSQL. A JSF/PrimeFaces frontend consumes that API.
 
-**Status:** Academic project · Programming Language 2, IFSP.
+## Features
 
-[![CI](https://github.com/ErickHTF/IF-Aluno/actions/workflows/ci.yml/badge.svg)](https://github.com/ErickHTF/IF-Aluno/actions/workflows/ci.yml)
-![Java 21](https://img.shields.io/badge/Java-21-ED8B00?logo=openjdk&logoColor=white) ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4-6DB33F?logo=springboot&logoColor=white) ![JSF](https://img.shields.io/badge/JSF-PrimeFaces-59666C) ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-13-4169E1?logo=postgresql&logoColor=white)
+- **Students**: create, list, filter, edit and delete.
+  - Fields: name, email, enrollment number, CPF, height, phone, date of birth and active.
+  - Validation: name with 3 to 100 characters, valid email, CPF in the `XXX.XXX.XXX-XX` format, height greater than zero, phone like `(16) 99123-4567` and date of birth in the past. All fields are required.
+  - Email and enrollment number are unique. A duplicate value returns `409 Conflict`.
+- **Schools**: create, list, filter, edit and delete.
+  - Fields: name (3 to 100 characters) and level (`FUNDAMENTAL`, `MEDIO` or `SUPERIOR`).
+- **Filters**: text fields are matched by substring, case-insensitive. An omitted filter is ignored.
+- **Errors**: validation failures and malformed data return `400` with a standard JSON body (`mensagem`, `mensagens` and `campos`, which holds the error for each field).
 
-[Run locally](#run-locally) · [Development guide](docs/development.md) ·
-[Architecture](docs/architecture.md) · [API reference](docs/api.md)
+## Screenshots
 
-![Student management screen with filters and registered students](docs/screenshots/students.jpg)
+![Students screen: filters, list and actions](docs/screenshots/students.jpg)
 
 <details>
-<summary>School management</summary>
+<summary>Schools screen</summary>
 
-![School management screen with registered schools](docs/screenshots/schools.jpg)
-
+![Schools screen](docs/screenshots/schools.jpg)
 </details>
 
-_The interface is in Brazilian Portuguese. Screenshots use synthetic data._
+## Architecture
 
-## Overview
-
-IF-Aluno demonstrates a server-rendered Java frontend consuming a separate REST
-API. Both student and school records support a complete management workflow.
-
-- Create, list, filter, edit and delete students and schools.
-- Validate student contact information, enrollment and birth dates.
-- Reject duplicate email addresses and enrollment numbers.
-- Display field validation and API errors in the interface.
-
-## Stack
-
-| Layer             | Technologies                             |
-| ----------------- | ---------------------------------------- |
-| Frontend          | JSF, PrimeFaces, Weld, Tomcat 9          |
-| Backend           | Java 21, Spring Boot 4, Spring Data JPA  |
-| Database          | PostgreSQL 13, Docker Compose            |
-| API documentation | springdoc-openapi                        |
-| Verification      | Maven, Spring Boot tests, GitHub Actions |
-
-## Run locally
-
-Install **Java 21**, **Git**, and **Docker with Docker Compose**. Maven is
-included through the wrappers.
-
-```bash
-git clone https://github.com/ErickHTF/IF-Aluno.git
-cd IF-Aluno
+```
+Browser ──► JSF Frontend (Tomcat 9, :8080) ──HTTP/JSON──► Spring Boot API (:8081) ──JPA──► PostgreSQL (Docker, :5433)
 ```
 
-Run these commands in separate terminals, starting from the repository root:
+| Folder | Contents |
+|---|---|
+| `/` (root) | REST API, `com.demo` package, with `aluno`, `escola` and `config` modules |
+| `frontend/if-aluno-jsf` | JSF/PrimeFaces frontend, packaged as a WAR |
+
+The frontend calls the API at `http://localhost:8081/demo-api`. That URL is set in `ifaluno.utils.JsonUtils.BASE_API`.
+
+## Requirements
+
+| Item | Version |
+|---|---|
+| JDK | 21 (the API uses Java 21; the frontend compiles to Java 17) |
+| Docker / Docker Compose | any recent version (to run PostgreSQL 13.22) |
+| Maven | no install needed: use the `mvnw` wrapper (Maven 3.9.16) |
+
+Main dependencies: Spring Boot 4.1.0, springdoc-openapi 2.8.6, JSF (Mojarra) 2.4.0, PrimeFaces 14.0.0, Weld 3.1.9 and Tomcat 9.0.98, which Cargo downloads on its own.
+
+## Getting Started
+
+Run the steps in order, each in its own terminal.
+
+**Linux / macOS**
 
 ```bash
-# Terminal 1 — database
+# 1. Database (from the root)
 docker compose up -d
-```
 
-```bash
-# Terminal 2 — API on port 8081
+# 2. API (from the root)
 ./mvnw spring-boot:run
-```
 
-```bash
-# Terminal 3 — JSF frontend on port 8080
+# 3. Frontend
 cd frontend/if-aluno-jsf
 ./mvnw clean package cargo:run
 ```
 
-Open [localhost:8080/if-aluno-jsf/](http://localhost:8080/if-aluno-jsf/).
-Cargo downloads Tomcat and deploys the frontend WAR. The API creates the database
-tables on startup.
+**Windows (cmd / PowerShell)**
 
-See the [development guide](docs/development.md) for Windows commands, dependency
-versions, database credentials and service URLs.
+```bat
+:: 1. Database (from the root)
+docker compose up -d
 
-## Verification
+:: 2. API (from the root)
+mvnw.cmd spring-boot:run
 
-Keep the local PostgreSQL database running, then execute from the repository root:
+:: 3. Frontend
+cd frontend\if-aluno-jsf
+mvnw.cmd clean package cargo:run
+```
+
+In IntelliJ, you can also start the API with the Run button on `DemoApplication`.
+
+Tables are created automatically on first run (`ddl-auto=update`).
+
+## Ports and URLs
+
+| Service | Port | URL |
+|---|---|---|
+| PostgreSQL (Docker) | 5433 | `jdbc:postgresql://localhost:5433/Aluno` (user `aluno_user`, password `aluno_password`) |
+| API (Spring Boot) | 8081 | http://localhost:8081/demo-api |
+| Swagger UI | 8081 | http://localhost:8081/swagger-ui/index.html |
+| Frontend (Tomcat 9) | 8080 | http://localhost:8080/if-aluno-jsf/ |
+
+## API Endpoints
+
+All endpoints live under the `/demo-api` prefix.
+
+| Method | Route | Description |
+|---|---|---|
+| GET | `/alunos` | Lists all students |
+| GET | `/alunos/{id}` | Gets a student by id (`404` if not found) |
+| GET | `/aluno?id=&nome=&email=&matricula=` | Filters students (all parameters are optional) |
+| POST | `/alunos` | Creates a student (`201`) |
+| PUT | `/alunos/{id}` | Updates a student (`404` if not found) |
+| DELETE | `/alunos/{id}` | Deletes a student |
+| GET | `/escolas` | Lists all schools |
+| GET | `/escolas/{id}` | Gets a school by id (`404` if not found) |
+| GET | `/escola?id=&nome=&nivel=` | Filters schools (all parameters are optional) |
+| POST | `/escolas` | Creates a school (`201`) |
+| PUT | `/escolas/{id}` | Updates a school (`404` if not found) |
+| DELETE | `/escolas/{id}` | Deletes a school |
+
+Example body for `POST /demo-api/alunos`:
+
+```json
+{
+  "nome": "João Silva",
+  "email": "email@aluno.ifsp.edu.br",
+  "matricula": "SP123456",
+  "cpf": "358.823.769-41",
+  "altura": 1.75,
+  "telefone": "(16) 99123-4567",
+  "dtNasc": "2005-03-15",
+  "ativo": true
+}
+```
+
+The Postman collections are in `src/main/resources/`.
+
+## Build and Tests
 
 ```bash
-./mvnw verify
-cd frontend/if-aluno-jsf
-./mvnw package
+./mvnw verify                                  # API (the test needs Postgres running)
+cd frontend/if-aluno-jsf && ./mvnw package     # produces target/if-aluno-jsf.war
 ```
 
-CI verifies the API and builds the frontend with a PostgreSQL service container.
-
-## Architecture
-
-```mermaid
-flowchart LR
-    Browser[Browser] --> JSF[JSF / PrimeFaces on Tomcat]
-    JSF -->|HTTP / JSON| API[Spring Boot API]
-    API -->|JPA| DB[(PostgreSQL)]
-```
-
-The JSF server consumes the API; the browser interacts with the rendered pages.
-The API separates student and school controllers, services and repositories.
-Read the [architecture guide](docs/architecture.md) for the source layout and
-frontend API configuration.
-
-## Documentation
-
-| Guide                                | Contents                                         |
-| ------------------------------------ | ------------------------------------------------ |
-| [Development](docs/development.md)   | Setup, ports, dependencies and build commands    |
-| [Architecture](docs/architecture.md) | Source layout and communication between services |
-| [API reference](docs/api.md)         | Routes, validation rules and request examples    |
-
-## Project context
-
-Developed for the Programming Language 2 course at IFSP. The domain names and
-interface are in Portuguese; this README provides an English overview.
-
-No license is currently included in this repository.
+GitHub Actions (`.github/workflows/ci.yml`) runs both builds on every push to `main` and on every pull request. In CI, PostgreSQL runs as a service container.

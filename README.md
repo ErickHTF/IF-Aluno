@@ -6,6 +6,7 @@ JSF/PrimeFaces web interface.
 **Status:** Academic project · Programming Language 2, IFSP.
 
 [![CI](https://github.com/ErickHTF/IF-Aluno/actions/workflows/ci.yml/badge.svg)](https://github.com/ErickHTF/IF-Aluno/actions/workflows/ci.yml)
+![Java 21](https://img.shields.io/badge/Java-21-ED8B00?logo=openjdk&logoColor=white) ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4-6DB33F?logo=springboot&logoColor=white) ![JSF](https://img.shields.io/badge/JSF-PrimeFaces-59666C) ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-13-4169E1?logo=postgresql&logoColor=white)
 
 [Run locally](#run-locally) · [Development guide](docs/development.md) ·
 [Architecture](docs/architecture.md) · [API reference](docs/api.md)
